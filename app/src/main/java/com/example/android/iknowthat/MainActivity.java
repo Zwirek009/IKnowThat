@@ -1,5 +1,6 @@
 package com.example.android.iknowthat;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,16 +12,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Random;
 
-// @TODO background image problem or virtual phone problem?
-// @TODO exit/continiuing (as new activity?)
-
 public class MainActivity extends AppCompatActivity {
+
+    public static Activity mainActivity;
 
     ArrayList<String> question = new ArrayList<>();
     ArrayList<Boolean> known = new ArrayList<>();
     ArrayList<Boolean> answerBoolean = new ArrayList<>();
     ArrayList<String> answerString = new ArrayList<>();
-    Random generator = new Random();
     int actualQuestionNumber;
     int numberOfLearnedQuestions = 0;
 
@@ -42,10 +41,28 @@ public class MainActivity extends AppCompatActivity {
 
     private void deleteQuestion()
     {
-        question.remove(actualQuestionNumber);
-        answerBoolean.remove(actualQuestionNumber);
-        known.remove(actualQuestionNumber);
-        answerString.remove(actualQuestionNumber);
+        if(question.size() == 1) {
+
+            Intent intent = new Intent(getApplicationContext(), EndScreen.class);
+
+            startActivity(intent);
+            finish();
+            return;
+        }
+        else
+        {
+            question.remove(actualQuestionNumber);
+            answerBoolean.remove(actualQuestionNumber);
+            known.remove(actualQuestionNumber);
+            answerString.remove(actualQuestionNumber);
+        }
+    }
+
+    private void displayNumOfNewThings()
+    {
+        TextView number = (TextView) findViewById(
+                R.id.number_new_things_text_view);
+        number.setText("New things learned: " + numberOfLearnedQuestions);
     }
 
     private boolean isTrue()
@@ -97,70 +114,41 @@ public class MainActivity extends AppCompatActivity {
         TextView questionTextView = (TextView) findViewById(R.id.question_text_view);
         if(question.get(actualQuestionNumber) != null)
             questionTextView.setText(question.get(actualQuestionNumber));
+        displayNumOfNewThings();
     }
 
     private void nextQuestion()
     {
         if(numberOfLearnedQuestions >= 5)
         {
-            Context context = getApplicationContext();
-            CharSequence text = "U have learned 5 new things - congratulations!\n\n" +
-                    "U can continue and learn 5 more :-)";
-            int duration = Toast.LENGTH_LONG;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
             numberOfLearnedQuestions = 0;
 
-            // no more questions available
+            Intent intent = new Intent(getApplicationContext(), Learned5Things.class);
+            startActivity(intent);
+
+            deleteQuestion();
         }
 
-        if(question.isEmpty())
+        if(question.size() > 1)
         {
-            Context context = getApplicationContext();
-            CharSequence text = "No more questions available - U know it all O.o";
-            int duration = Toast.LENGTH_LONG;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-            // no more questions available
-        }
-        else
-        {
+            Random generator = new Random();
             actualQuestionNumber = generator.nextInt(question.size() - 1);
-            displayQuestion();
         }
+        else actualQuestionNumber = 0;
+
+        displayQuestion();
     }
 
-    public void clickedTrue(View view)   // @TODO chyba tu sie wywala z bledem
+    public void clickedTrue(View view)
     {
-        if(question.isEmpty())
-        {
-            /*// Exit to OS
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);*/
-        }
-
         if(isTrue()) isKnown();
         else uFuckedUp();
 
         nextQuestion();
     }
 
-    public void clickedFalse(View view)    // @TODO albo tu blad zakonczenia
+    public void clickedFalse(View view)
     {
-        if(question.isEmpty())
-        {
-           /* // Exit to OS
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);*/
-        }
-
         if (!isTrue()) isKnown();
         else uFuckedUp();
 
@@ -172,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainActivity = this;
 
         // standard questions to answer
         addNewQuestion("Walt Disney was born in 1901.", true);
@@ -185,6 +174,12 @@ public class MainActivity extends AppCompatActivity {
         addNewQuestion("Hex-code of white is #000000", false, "#FFFFFF");
         addNewQuestion("Massachusetts Institute of Technology is known as the best technical " +
                 "university in the world.", true);
+        addNewQuestion("Bangladesh is in Africa", false, "Asia");
+        addNewQuestion("Google was founded in 1998", true);
+        addNewQuestion("Larry Page was one of founders of Facebook.", false, "Google");
+        addNewQuestion("Special theory of relativity was proposed in " +
+                "1905 by Albert Einstein.", true);
+        addNewQuestion("The Great Fire of Rome took place in 46 AD", false, "64 AD");
 
         // start the game
         nextQuestion();

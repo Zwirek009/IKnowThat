@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+
+    tools:context="com.example.android.iknowthat.EndScreen">
+
+    <ImageView
+        android:id="@id/photo_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="center"
+        android:src="@drawable/smile" />
+
+    <TextView
+        android:id="@+id/end_message_text_view"
+        style="@style/TextSecondary"
+        android:textColor="@color/colorTextPrimary"
+        android:layout_alignParentTop="true"
+        android:text="U have learned 5 new things - congratulations!"
+        android:layout_marginTop="42dp"/>
+
+    <TextView
+        android:id="@+id/continue_text_view"
+        style="@style/TextPrimary"
+        android:text="U can continue and learn 5 more :-)"
+        android:textAlignment="center"
+        android:layout_above="@+id/buttons2_layout"/>
+
+    <LinearLayout
+        android:id="@+id/buttons2_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            style="@style/Button"
+            android:id="@+id/continue_button"
+            android:textAllCaps="true"
+            android:text="Continue"
+            android:background="#3F51B5"
+            android:onClick="clickedContinue"/>
+
+        <Button
+            style="@style/Button"
+            android:textAllCaps="true"
+            android:text="Close App"
+            android:background="#D50000"
+            android:onClick="closeApp"/>
+    </LinearLayout>
+</RelativeLayout>
