@@ -1,5 +1,5 @@
 # IKnowThat
-Simple quiz app that learns you 5 new things, that you haven't known yet.
+Simple Android quiz app that learns you 5 new things, that you haven't known yet.
 
 Link to example game video -> https://youtu.be/-6uK9E7qSuI
 
